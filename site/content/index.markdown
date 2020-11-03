@@ -140,7 +140,7 @@ url: "/"
 # Load keymap
 loadkeys [keymap]
 # Download alis directly or with url shortener
-curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash
+curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash
 curl -sL https://bit.ly/2F3CATp | bash
 # Edit alis.conf and change variables values with your preferences
 vim alis.conf
@@ -175,7 +175,7 @@ vim alis.conf
 # Load keymap
 loadkeys [keymap]
 # Download alis directly or with url shortener
-curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash
+curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash
 curl -sL https://bit.ly/2F3CATp | bash
 ./alis-asciinema.sh
 # Edit alis.conf and change variables values with your preferences
@@ -204,7 +204,7 @@ exit
 # Load keymap
 loadkeys [keymap]
 # Download alis directly or with url shortener
-curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash
+curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash
 curl -sL https://bit.ly/2F3CATp | bash
 # Edit alis-recovery.conf and change variables values with your last installation with alis
 vim alis-recovery.conf
@@ -224,8 +224,8 @@ vim alis-recovery.conf
     <div class="content-wrapper">
       <ul>
         <li>Test in VirtualBox and create an issue if something does not work, attach the main parts of the used configuration file and the error message</li>
-        <li><a href="https://github.com/picodotdev/alis/issues">Create issues</a> with new features</li>
-        <li>Send <a href="https://github.com/picodotdev/alis/pulls">pull requests</a></li>
+        <li><a href="https://github.com/mike-morr/alis/issues">Create issues</a> with new features</li>
+        <li>Send <a href="https://github.com/mike-morr/alis/pulls">pull requests</a></li>
         <li>Share it in social networks, forums, create a blog post or video about it</li>
       </ul>
     </div>

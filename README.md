@@ -14,7 +14,7 @@ Follow the [Arch Way](https://wiki.archlinux.org/index.php/Arch_Linux) of doing 
 
 Please, don't ask for support for this script in Arch Linux forums, first read the [Arch Linux wiki](https://wiki.archlinux.org), the [Installation Guide](https://wiki.archlinux.org/index.php/Installation_guide) and the [General Recomendations](https://wiki.archlinux.org/index.php/General_recommendations), later compare those commands with the commands of this script.
 
-For new features, improvements and bugs fill an issue in GitHub or make a pull request. You can test it in a [VirtualBox](https://www.virtualbox.org/) virtual machine (strongly recommended) before run it in real hardware. If you test it in real hardware please send me an email to pico.dev@gmail.com with the machine description and tell me if something goes wrong or all works fine. [Pull request](https://github.com/picodotdev/alis/pulls) and [new feature request](https://github.com/picodotdev/alis/issues) are welcome!
+For new features, improvements and bugs fill an issue in GitHub or make a pull request. You can test it in a [VirtualBox](https://www.virtualbox.org/) virtual machine (strongly recommended) before run it in real hardware. If you test it in real hardware please send me an email to pico.dev@gmail.com with the machine description and tell me if something goes wrong or all works fine. [Pull request](https://github.com/mike-morr/alis/pulls) and [new feature request](https://github.com/mike-morr/alis/issues) are welcome!
 
 ### Principles
 
@@ -65,7 +65,7 @@ Internet connection is required, with wireless WIFI connection see <a href="http
 ```
 # # Start the system with lastest Arch Linux installation media
 # loadkeys [keymap]
-# curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
+# curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
 # # Edit alis.conf and change variables values with your preferences
 # vim alis.conf
 # # Start
@@ -75,7 +75,7 @@ Internet connection is required, with wireless WIFI connection see <a href="http
 If you fork _alis_ repository you can host your own configuration and changes in your repository.
 
 ```
-# curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash -s -- -u [github user]
+# curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash -s -- -u [github user]
 ```
 
 ### Installation with asciinema video
@@ -85,7 +85,7 @@ As another form of log.
 ```
 # # Start the system with lastest Arch Linux installation media
 # loadkeys [keymap]
-# curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
+# curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
 # ./alis-asciinema.sh
 # # Edit alis.conf and change variables values with your preferences
 # vim alis.conf
@@ -103,7 +103,7 @@ Boot from the latest <a href="https://www.archlinux.org/download/">original Arch
 ```
 # # Start the system with lastest Arch Linux installation media
 # loadkeys [keymap]
-# curl https://raw.githubusercontent.com/picodotdev/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
+# curl https://raw.githubusercontent.com/mike-morr/alis/master/download.sh | bash, or with URL shortener curl -sL https://bit.ly/2F3CATp | bash
 # # Edit alis-recovery.conf and change variables values with your last installation with alis
 # vim alis-recovery.conf
 # # Optional asciinema video
@@ -131,7 +131,7 @@ VirtualBox and [Packer](https://packer.io/) are required.
 
 
 ```
-$ curl https://raw.githubusercontent.com/picodotdev/alis/master/download-packer.sh | bash
+$ curl https://raw.githubusercontent.com/mike-morr/alis/master/download-packer.sh | bash
 
 $ ./alis-packer.sh -c alis-packer-efi-btrfs-luks-lvm-systemd.json
 $ ./alis-packer.sh -c alis-packer-efi-ext4-grub-gnome.json

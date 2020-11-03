@@ -1,4 +1,4 @@
-baseURL: https://picodotdev.github.io/alis/
+baseURL: https://mike-morr.github.io/alis/
 languageCode: en-us
 title: "alis :. Arch Linux Install Script"
 theme: alis
@@ -24,7 +24,7 @@ params:
   description: 
   navbarlogo:
     text: "alis"
-    link: https://github.com/picodotdev/alis/
+    link: https://github.com/mike-morr/alis/
   font:
     name: "Open Sans"
     sizes: [400,600]
@@ -40,7 +40,7 @@ params:
   - title: Video
     url: "#video"
   - title: GitHub
-    url: "https://github.com/picodotdev/alis/"
+    url: "https://github.com/mike-morr/alis/"
   - title: More
     sublinks:
     - title: Installation with log
@@ -51,7 +51,7 @@ params:
       url: "#howyoucanhelp"
   footer:
     socialmedia:
-    - link: https://github.com/picodotdev/alis/
+    - link: https://github.com/mike-morr/alis/
       icon: github
     bulmalogo: true
     quicklinks:

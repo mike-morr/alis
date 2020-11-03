@@ -3,9 +3,9 @@ set -e
 
 # Arch Linux Install Script (alis) installs unattended, automated
 # and customized Arch Linux system.
-# Copyright (C) 2020 picodotdev
+# Copyright (C) 2020 mike-morr
 
-GITHUB_USER="picodotdev"
+GITHUB_USER="mike-morr"
 
 while getopts "u:" arg; do
   case ${arg} in

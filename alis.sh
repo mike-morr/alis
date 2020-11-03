@@ -573,6 +573,7 @@ function partition() {
         btrfs subvolume create @tmp
         btrfs subvolume create @usr-local
         btrfs subvolume create @snapshots
+        cd ${HOME}
         umount /mnt
 
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot

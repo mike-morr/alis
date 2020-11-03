@@ -562,6 +562,7 @@ function partition() {
     # mount btrfs setup like opensuse https://en.opensuse.org/SDB:BTRFS#Default_Subvolumes
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
+        cd /mnt
         btrfs subvolume create @
         btrfs subvolume create @root-home
         btrfs subvolume create @var

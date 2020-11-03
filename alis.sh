@@ -553,28 +553,39 @@ function partition() {
 
     if [ "$DEVICE_TRIM" == "true" ]; then
         if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
-            PARTITION_OPTIONS="$PARTITION_OPTIONS,noatime,nodiscard"
+            PARTITION_OPTIONS="$PARTITION_OPTIONS,noatime,nodiscard,X-mount.mkdir"
         else
-            PARTITION_OPTIONS="$PARTITION_OPTIONS,noatime"
+            PARTITION_OPTIONS="$PARTITION_OPTIONS,noatime,X-mount.mkdir"
         fi
     fi
 
-    # mount
+    # mount btrfs setup like opensuse https://en.opensuse.org/SDB:BTRFS#Default_Subvolumes
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
-        btrfs subvolume create /mnt/root
-        btrfs subvolume create /mnt/home
-        btrfs subvolume create /mnt/var
-        btrfs subvolume create /mnt/snapshots
+        btrfs subvolume create @
+        btrfs subvolume create @root-home
+        btrfs subvolume create @var
+        btrfs subvolume create @srv
+        btrfs subvolume create @home
+        btrfs subvolume create @opt
+        btrfs subvolume create @grub2
+        btrfs subvolume create @tmp
+        btrfs subvolume create @usr-local
+        btrfs subvolume create @snapshots
         umount /mnt
 
-        mount -o "subvol=root,$PARTITION_OPTIONS,compress=lzo" "$DEVICE_ROOT" /mnt
-
-        mkdir /mnt/{boot,home,var,snapshots}
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot
-        mount -o "subvol=home,$PARTITION_OPTIONS,compress=lzo" "$DEVICE_ROOT" /mnt/home
-        mount -o "subvol=var,$PARTITION_OPTIONS,compress=lzo" "$DEVICE_ROOT" /mnt/var
-        mount -o "subvol=snapshots,$PARTITION_OPTIONS,compress=lzo" "$DEVICE_ROOT" /mnt/snapshots
+
+        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt
+        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/root
+        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/var
+        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/srv
+        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/home
+        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/opt
+        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/boot/grub2
+        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/tmp
+        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/usr/local
+        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/.snapshots
     else
         mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
 

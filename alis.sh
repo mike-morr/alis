@@ -544,15 +544,15 @@ function partition() {
     if [ "$BIOS_TYPE" == "uefi" ]; then
         wipefs -a $PARTITION_BOOT
         wipefs -a $DEVICE_ROOT
-        mkfs.fat -n "boot-${LABEL_SUFFIX}" -F32 $PARTITION_BOOT
-        mkfs."$FILE_SYSTEM_TYPE" -L "root-${LABEL_SUFFIX}" $DEVICE_ROOT
+        mkfs.fat -n "${BOOT_LABEL}" -F32 $PARTITION_BOOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "${ROOT_LABEL}" $DEVICE_ROOT
     fi
 
     if [ "$BIOS_TYPE" == "bios" ]; then
         wipefs -a $PARTITION_BOOT
         wipefs -a $DEVICE_ROOT
-        mkfs."$FILE_SYSTEM_TYPE" -L "boot-${LABEL_SUFFIX}" $PARTITION_BOOT
-        mkfs."$FILE_SYSTEM_TYPE" -L "root-${LABEL_SUFFIX}" $DEVICE_ROOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "${BOOT_LABEL}" $PARTITION_BOOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "${ROOT_LABEL}" $DEVICE_ROOT
     fi
 
     PARTITION_OPTIONS="defaults"

@@ -617,7 +617,6 @@ function partition() {
     # set variables
     BOOT_DIRECTORY=/boot
     ESP_DIRECTORY=/efi
-    mkdir -p ${ESP_DIRECTORY}
     UUID_BOOT=$(blkid -s UUID -o value $PARTITION_BOOT)
     UUID_ROOT=$(blkid -s UUID -o value $PARTITION_ROOT)
     PARTUUID_BOOT=$(blkid -s PARTUUID -o value $PARTITION_BOOT)
@@ -1084,6 +1083,7 @@ function bootloader() {
 }
 
 function bootloader_grub() {
+    arch-chroot /mnt mkdir -p ${ESP_DIRECTORY}
     pacman_install "grub dosfstools"
     arch-chroot /mnt sed -i 's/GRUB_DEFAULT=0/GRUB_DEFAULT=saved/' /etc/default/grub
     arch-chroot /mnt sed -i 's/#GRUB_SAVEDEFAULT="true"/GRUB_SAVEDEFAULT="true"/' /etc/default/grub

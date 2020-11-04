@@ -485,7 +485,7 @@ function partition() {
 
     # Use labels instead of UUID to reduce risk of UUID changing before first boot
     LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 7 | head -n 1)
-    
+    echo "SUFFIX=${LABEL_SUFFIX}"
     BOOT_LABEL="boot-${LABEL_SUFFIX}"
     ROOT_LABEL="root-${LABEL_SUFFIX}"
 
@@ -616,7 +616,7 @@ function partition() {
 
     # set variables
     BOOT_DIRECTORY=/boot
-    ESP_DIRECTORY=/boot
+    ESP_DIRECTORY=/boot/efi
     UUID_BOOT=$(blkid -s UUID -o value $PARTITION_BOOT)
     UUID_ROOT=$(blkid -s UUID -o value $PARTITION_ROOT)
     PARTUUID_BOOT=$(blkid -s PARTUUID -o value $PARTITION_BOOT)

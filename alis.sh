@@ -483,7 +483,11 @@ function partition() {
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/nvme0n1p/}"
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/mmcblk0p/}"
 
+    # Use labels instead of UUID to reduce risk of UUID changing before first boot
     LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 7 | head -n 1)
+    
+    BOOT_LABEL="boot-${LABEL_SUFFIX}"
+    ROOT_LABEL="root-${LABEL_SUFFIX}"
 
     # partition
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
@@ -580,21 +584,21 @@ function partition() {
 
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot
 
-        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt
-        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/root
-        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/var
-        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/srv
-        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/home
-        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/opt
-        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/boot/grub2
-        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/tmp
-        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/usr/local
-        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/.snapshots
+        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt
+        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/root
+        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/var
+        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/srv
+        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/home
+        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/opt
+        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/boot/grub2
+        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/tmp
+        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/usr/local
+        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/.snapshots
     else
-        mount -o "$PARTITION_OPTIONS" "LABEL=root-${LABEL_SUFFIX}" /mnt
+        mount -o "$PARTITION_OPTIONS" "LABEL=${ROOT_LABEL}" /mnt
 
         mkdir /mnt/boot
-        mount -o "$PARTITION_OPTIONS" "LABEL=boot-${LABEL_SUFFIX}" /mnt/boot
+        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot
     fi
 
     # swap
@@ -1039,16 +1043,17 @@ function bootloader() {
     if [ "$LVM" == "true" ]; then
         CMDLINE_LINUX_ROOT="root=$DEVICE_ROOT"
     else
-        CMDLINE_LINUX_ROOT="root=PARTUUID=$PARTUUID_ROOT"
+        # CMDLINE_LINUX_ROOT="root=PARTUUID=$PARTUUID_ROOT"
+        CMDLINE_LINUX_ROOT="root=LABEL=${ROOT_LABEL}"
     fi
     if [ -n "$LUKS_PASSWORD" ]; then
         if [ "$DEVICE_TRIM" == "true" ]; then
             BOOTLOADER_ALLOW_DISCARDS=":allow-discards"
         fi
-        CMDLINE_LINUX="cryptdevice=PARTUUID=$PARTUUID_ROOT:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS"
+        CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS"
     fi
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
-        CMDLINE_LINUX="$CMDLINE_LINUX rootflags=subvol=root"
+        CMDLINE_LINUX="$CMDLINE_LINUX rootflags=subvol=@"
     fi
     if [ "$KMS" == "true" ]; then
         case "$DISPLAY_DRIVER" in
@@ -1089,7 +1094,7 @@ function bootloader_grub() {
 
     if [ "$BIOS_TYPE" == "uefi" ]; then
         pacman_install "efibootmgr"
-        arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub --efi-directory=$ESP_DIRECTORY --recheck
+        arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id='Arch Linux' --efi-directory=$ESP_DIRECTORY --recheck
         #arch-chroot /mnt efibootmgr --create --disk $DEVICE --part $PARTITION_BOOT_NUMBER --loader /EFI/grub/grubx64.efi --label "GRUB Boot Manager"
     fi
     if [ "$BIOS_TYPE" == "bios" ]; then

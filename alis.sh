@@ -1246,7 +1246,7 @@ EOT
     fi
 
     if [ -n "$LUKS_PASSWORD" ]; then
-       SYSTEMD_OPTIONS="luks.name=$UUID_ROOT=$LUKS_DEVICE_NAME luks.options=discard"
+       SYSTEMD_OPTIONS="luks.name=${ROOT_LABEL}=$LUKS_DEVICE_NAME luks.options=discard"
     fi
 
     echo "title Arch Linux" >> "/mnt$ESP_DIRECTORY/loader/entries/archlinux.conf"

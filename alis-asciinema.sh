@@ -5,7 +5,7 @@ set -e
 # and customized Arch Linux system.
 # Copyright (C) 2020 mike-morr
 
-curl -o https://github.com/asciinema/asciinema/archive/v2.0.1.zip -O asciinema-2.0.1.zip
+curl https://github.com/asciinema/asciinema/archive/v2.0.1.zip -o asciinema-2.0.1.zip
 bsdtar -x -f asciinema-2.0.1.zip
 cp -r asciinema-2.0.1/* .
 rm -f alis.asciinema

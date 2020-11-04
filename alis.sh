@@ -483,6 +483,8 @@ function partition() {
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/nvme0n1p/}"
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/mmcblk0p/}"
 
+    LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 7 | head -n 1)
+
     # partition
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
         pacman -Sy --noconfirm f2fs-tools
@@ -538,15 +540,15 @@ function partition() {
     if [ "$BIOS_TYPE" == "uefi" ]; then
         wipefs -a $PARTITION_BOOT
         wipefs -a $DEVICE_ROOT
-        mkfs.fat -n ESP -F32 $PARTITION_BOOT
-        mkfs."$FILE_SYSTEM_TYPE" -L root $DEVICE_ROOT
+        mkfs.fat -n "boot-${LABEL_SUFFIX}" -F32 $PARTITION_BOOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "root-${LABEL_SUFFIX}" $DEVICE_ROOT
     fi
 
     if [ "$BIOS_TYPE" == "bios" ]; then
         wipefs -a $PARTITION_BOOT
         wipefs -a $DEVICE_ROOT
-        mkfs."$FILE_SYSTEM_TYPE" -L boot $PARTITION_BOOT
-        mkfs."$FILE_SYSTEM_TYPE" -L root $DEVICE_ROOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "boot-${LABEL_SUFFIX}" $PARTITION_BOOT
+        mkfs."$FILE_SYSTEM_TYPE" -L "root-${LABEL_SUFFIX}" $DEVICE_ROOT
     fi
 
     PARTITION_OPTIONS="defaults"
@@ -578,21 +580,21 @@ function partition() {
 
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot
 
-        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt
-        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/root
-        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/var
-        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/srv
-        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/home
-        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/opt
-        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/boot/grub2
-        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/tmp
-        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/usr/local
-        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/.snapshots
+        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt
+        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/root
+        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/var
+        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/srv
+        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/home
+        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/opt
+        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/boot/grub2
+        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/tmp
+        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/usr/local
+        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "LABEL=root-${LABEL_SUFFIX}" /mnt/.snapshots
     else
-        mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
+        mount -o "$PARTITION_OPTIONS" "LABEL=root-${LABEL_SUFFIX}" /mnt
 
         mkdir /mnt/boot
-        mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot
+        mount -o "$PARTITION_OPTIONS" "LABEL=boot-${LABEL_SUFFIX}" /mnt/boot
     fi
 
     # swap

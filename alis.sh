@@ -486,8 +486,8 @@ function partition() {
     # Use labels instead of UUID to reduce risk of UUID changing before first boot
     LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 7 | head -n 1)
     echo "SUFFIX=${LABEL_SUFFIX}"
-    BOOT_LABEL="boot-${LABEL_SUFFIX}"
-    ROOT_LABEL="root-${LABEL_SUFFIX}"
+    BOOT_LABEL="BOOT-${LABEL_SUFFIX}"
+    ROOT_LABEL="ROOT-${LABEL_SUFFIX}"
 
     # partition
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then

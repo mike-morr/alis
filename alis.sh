@@ -1572,7 +1572,7 @@ function end() {
         fi
 
         if [ "$REBOOT" == 'true' ]; then
-            umount -R /mnt/boot
+            umount -R /mnt/boot/efi
             umount -R /mnt
             reboot
         fi

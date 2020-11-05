@@ -582,7 +582,7 @@ function partition() {
         cd ${HOME}
         umount /mnt
 
-        mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot
+        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
 
         mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt
         mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/root

@@ -582,7 +582,7 @@ function partition() {
         cd ${HOME}
         umount /mnt
 
-        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
+        
 
         mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt
         mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/root
@@ -594,6 +594,9 @@ function partition() {
         mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/tmp
         mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/usr/local
         mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/.snapshots
+
+        mkdir -p /mnt/boot/efi
+        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
     else
         mount -o "$PARTITION_OPTIONS" "LABEL=${ROOT_LABEL}" /mnt
 

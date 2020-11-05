@@ -5,7 +5,7 @@
 # let's get minimum deps for PowerShell
 pacman --noconfirm --needed -S git fakeroot dotnet-runtime dotnet-sdk
 
-export PATH="${PATH}:~/.dotnet/tools"
+export PATH="${PATH}:${HOME}/.dotnet/tools"
 
 dotnet tool install --global PowerShell
 

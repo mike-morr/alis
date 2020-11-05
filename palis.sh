@@ -1,5 +1,10 @@
-# deps
-pacman --needed -S git fakeroot
+# Archbomination - Mixing PowerShell and Arch
+# very deep on PowerShell, so let's try it for arch install
+# includes btrfs and is based on arch official install guide
+# mostly an automatic version of https://wiki.archlinux.org/index.php/User:Altercation/Bullet_Proof_Arch_Install
+
+# let's get minimum deps for PowerShell
+pacman --noconfirm --needed -S git fakeroot
 
 # create aur build directory
 rm -rf /home/build || true
@@ -18,3 +23,6 @@ cd powershell-bin
 cat PKGBUILD
 
 sudo -u nobody makepkg -si
+
+# PowerShell has been installed, start the install
+pwsh -c ./install.ps1

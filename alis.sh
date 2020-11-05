@@ -1097,6 +1097,7 @@ function bootloader_grub() {
 
     if [ "$BIOS_TYPE" == "uefi" ]; then
         pacman_install "efibootmgr"
+        mount
         arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id='Arch Linux' --efi-directory=$ESP_DIRECTORY --recheck
         #arch-chroot /mnt efibootmgr --create --disk $DEVICE --part $PARTITION_BOOT_NUMBER --loader /EFI/grub/grubx64.efi --label "GRUB Boot Manager"
     fi

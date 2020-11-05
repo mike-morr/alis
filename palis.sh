@@ -1,5 +1,5 @@
 # deps
-pacman -S git fakeroot
+pacman --needed -S git fakeroot
 
 # create aur build directory
 mkdir /home/build

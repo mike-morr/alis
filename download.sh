@@ -40,6 +40,7 @@ curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_U
 curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery.sh
 curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-asciinema.sh
 curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-reboot.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/groot-i-am-root.jpg
 
 chmod +x alis.sh
 chmod +x palis.sh

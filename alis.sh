@@ -1471,6 +1471,13 @@ function desktop_environment_i3_gaps() {
     arch-chroot /mnt systemctl enable lightdm.service
 }
 
+function copyDesktopBackgrounds() {
+    print_step "copyDesktopBackgrounds()"
+    mkdir -p /home/$USER_NAME/Pictures
+    cp ~/*.jpg /home/$USER_NAME/Pictures
+    cp ~/*.png /home/$USER_NAME/Pictures
+}
+
 function packages() {
     print_step "packages()"
 
@@ -1718,6 +1725,7 @@ function main() {
     fi
     if [ -n "$DESKTOP_ENVIRONMENT" ]; then
         execute_step "desktop_environment" "${STEPS}"
+        execute_step "copyDesktopBackgrounds" "${STEPS}"
     fi
     execute_step "packages" "${STEPS}"
     execute_step "systemd_units" "${STEPS}"

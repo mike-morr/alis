@@ -1,4 +1,4 @@
-# Archbomination - Mixing dotnet and Arch
+# Archbomination - Mixing PowerShell and Arch
 # includes btrfs and is based on arch official install guide
 # mostly an automatic version of https://wiki.archlinux.org/index.php/User:Altercation/Bullet_Proof_Arch_Install
 

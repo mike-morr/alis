@@ -6,7 +6,7 @@ setfacl -m u::rwx,g::rwx /home/build
 setfacl -d --set u::rwx,g::rwx,o::- /home/build
 cd /home/build
 
-# Clone PowerShell
+# Clone and build PowerShell
 git clone https://aur.archlinux.org/powershell-bin.git
 cd powershell-bin
 cat PKGBUILD

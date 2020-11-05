@@ -597,8 +597,8 @@ function partition() {
     else
         mount -o "$PARTITION_OPTIONS" "LABEL=${ROOT_LABEL}" /mnt
 
-        mkdir /mnt/boot
-        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot
+        mkdir /mnt/boot/efi
+        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
     fi
 
     # swap

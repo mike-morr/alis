@@ -31,6 +31,8 @@ rm -f alis-recovery-reboot.sh
 
 curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.conf
 curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.sh
+curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/palis.sh
+curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/install.ps1
 curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-asciinema.sh
 curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-reboot.sh
 
@@ -40,6 +42,8 @@ curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery
 curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-reboot.sh
 
 chmod +x alis.sh
+chmod +x palis.sh
+chmod +x install.ps1
 chmod +x alis-asciinema.sh
 chmod +x alis-reboot.sh
 

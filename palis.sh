@@ -1,3 +1,6 @@
+# deps
+pacman -S git fakeroot
+
 # create aur build directory
 mkdir /home/build
 chgrp nobody /home/build

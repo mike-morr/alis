@@ -29,17 +29,17 @@ rm -f alis-recovery.sh
 rm -f alis-recovery-asciinema.sh
 rm -f alis-recovery-reboot.sh
 
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.conf
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.sh
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/palis.sh
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/install.ps1
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-asciinema.sh
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-reboot.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.conf
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/palis.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/install.ps1
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-asciinema.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-reboot.sh
 
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery.conf
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery.sh
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-asciinema.sh
-curl -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-reboot.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery.conf
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-asciinema.sh
+curl -H "Cache-Control: no-cache" -O https://raw.githubusercontent.com/$GITHUB_USER/alis/master/alis-recovery-reboot.sh
 
 chmod +x alis.sh
 chmod +x palis.sh

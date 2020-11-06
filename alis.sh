@@ -720,7 +720,7 @@ EOT
         echo "vm.swappiness=10" > /mnt/etc/sysctl.d/99-sysctl.conf
     fi
 
-    arch-chroot /mnt printf "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
+    printf "$ROOT_PASSWORD\n$ROOT_PASSWORD" | arch-chroot /mnt passwd
 }
 
 function mkinitcpio_configuration() {

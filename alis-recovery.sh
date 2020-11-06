@@ -232,14 +232,14 @@ function prepare() {
 
 function prepare_partition() {
     if [ -d /mnt/boot ]; then
-        umount /mnt/boot
-        umount /mnt
+        umount /mnt/boot || true
+        umount /mnt || true
     fi
     if [ -e "/dev/mapper/$LVM_VOLUME_GROUP-$LVM_VOLUME_LOGICAL" ]; then
-        umount "/dev/mapper/$LVM_VOLUME_GROUP-$LVM_VOLUME_LOGICAL"
+        umount "/dev/mapper/$LVM_VOLUME_GROUP-$LVM_VOLUME_LOGICAL" || true
     fi
     if [ -e "/dev/mapper/$LUKS_DEVICE_NAME" ]; then
-        cryptsetup close $LUKS_DEVICE_NAME
+        cryptsetup close $LUKS_DEVICE_NAME || true
     fi
     partprobe $DEVICE
 }

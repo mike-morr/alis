@@ -1060,7 +1060,7 @@ function bootloader() {
         if [ "$DEVICE_TRIM" == "true" ]; then
             BOOTLOADER_ALLOW_DISCARDS=":allow-discards"
         fi
-        CMDLINE_LINUX="cryptkey=rootfs:/root/cryptlvm.keyfile cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS"
+        CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
     fi
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         CMDLINE_LINUX="$CMDLINE_LINUX rootflags=subvol=@"

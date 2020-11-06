@@ -1074,7 +1074,7 @@ function bootloader() {
         #     BOOTLOADER_ALLOW_DISCARDS=""
         # fi
         # CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
-        CMDLINE_LINUX="cryptdevice=UUID=$UUID_ROOT:$LUKS_DEVICE_NAME root=/dev/mapper/$LUKS_DEVICE_NAME nowatchdog" # cryptkey=rootfs:\/crypto_keyfile.bin
+        CMDLINE_LINUX="cryptdevice=UUID=${UUID_ROOT}:${LUKS_DEVICE_NAME} root=/dev/mapper/${LUKS_DEVICE_NAME} nowatchdog" # cryptkey=rootfs:\/crypto_keyfile.bin
     fi
 
     if [ -n "$KERNELS_PARAMETERS" ]; then

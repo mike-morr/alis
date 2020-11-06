@@ -483,11 +483,11 @@ function partition() {
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/nvme0n1p/}"
     PARTITION_ROOT_NUMBER="${PARTITION_ROOT_NUMBER//\/dev\/mmcblk0p/}"
 
-    # Use labels instead of UUID to reduce risk of UUID changing before first boot
-    LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 6 | head -n 1)
-    echo "SUFFIX=${LABEL_SUFFIX}"
-    BOOT_LABEL="BOOT-${LABEL_SUFFIX}"
-    ROOT_LABEL="ROOT-${LABEL_SUFFIX}"
+
+    # LABEL_SUFFIX=$(cat /dev/urandom | tr -dc 'A-Z0-9' | fold -w 6 | head -n 1)
+    # echo "SUFFIX=${LABEL_SUFFIX}"
+    BOOT_LABEL="boot"
+    ROOT_LABEL="root"
 
     # partition
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
@@ -588,25 +588,25 @@ function partition() {
 
         
 
-        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt
-        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/root
-        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/var
-        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/srv
-        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/home
-        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/opt
-        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/boot/grub2
-        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/tmp
-        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/usr/local
-        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "LABEL=${ROOT_LABEL}" /mnt/.snapshots
+        mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt
+        mount -o "subvol=@root-home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/root
+        mount -o "subvol=@var,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/var
+        mount -o "subvol=@srv,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/srv
+        mount -o "subvol=@home,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/home
+        mount -o "subvol=@opt,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/opt
+        mount -o "subvol=@grub2,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/boot/grub2
+        mount -o "subvol=@tmp,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/tmp
+        mount -o "subvol=@usr-local,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/usr/local
+        mount -o "subvol=@snapshots,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt/.snapshots
 
         mkdir -p /mnt/boot/efi
-        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
+        mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot/efi
         cp /crypto_keyfile.bin /mnt/
     else
-        mount -o "$PARTITION_OPTIONS" "LABEL=${ROOT_LABEL}" /mnt
+        mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
 
         mkdir /mnt/boot/efi
-        mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
+        mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot/efi
     fi
 
     # swap
@@ -1053,14 +1053,15 @@ function bootloader() {
     if [ "$LVM" == "true" ]; then
         CMDLINE_LINUX_ROOT="root=$DEVICE_ROOT"
     else
-        # CMDLINE_LINUX_ROOT="root=PARTUUID=$PARTUUID_ROOT"
-        CMDLINE_LINUX_ROOT="root=LABEL=${ROOT_LABEL}"
+        CMDLINE_LINUX_ROOT="root=PARTUUID=$PARTUUID_ROOT"
+        # CMDLINE_LINUX_ROOT="root=LABEL=${ROOT_LABEL}"
     fi
     if [ -n "$LUKS_PASSWORD" ]; then
         if [ "$DEVICE_TRIM" == "true" ]; then
             BOOTLOADER_ALLOW_DISCARDS=":allow-discards"
         fi
-        CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
+        # CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
+        CMDLINE_LINUX="cryptdevice=PARTUUID=$PARTUUID_ROOT:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
     fi
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         CMDLINE_LINUX="$CMDLINE_LINUX rootflags=subvol=@"

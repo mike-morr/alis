@@ -319,7 +319,7 @@ function configure_time() {
 
 function prepare_partition() {
     if [ -d /mnt/boot ]; then
-        umount /mnt/boot || true
+        umount /mnt/boot/efi || true
         umount -R /mnt || true
     fi
     if [ -e "/dev/mapper/$LVM_VOLUME_GROUP-$LVM_VOLUME_LOGICAL" ]; then

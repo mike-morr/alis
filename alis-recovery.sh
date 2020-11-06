@@ -232,7 +232,7 @@ function prepare() {
 
 function prepare_partition() {
     if [ -d /mnt/boot ]; then
-        umount /mnt/boot || true
+        umount /mnt/boot/efi || true
         umount /mnt || true
     fi
     if [ -e "/dev/mapper/$LVM_VOLUME_GROUP-$LVM_VOLUME_LOGICAL" ]; then

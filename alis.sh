@@ -516,10 +516,13 @@ function partition() {
 
     # luks and lvm
     if [ -n "$LUKS_PASSWORD" ]; then
-        dd bs=512 count=4 if=/dev/random of=/etc/luks_ikey iflag=fullblock
-        echo -n "$LUKS_PASSWORD" | cryptsetup --key-size=512 --key-file=/etc/luks_ikey luksFormat --type luks1 $PARTITION_ROOT
+        echo -n "$LUKS_PASSWORD" | cryptsetup --key-size=512 --key-file=- luksFormat --type luks1 $PARTITION_ROOT
         echo -n "$LUKS_PASSWORD" | cryptsetup --key-file=- open $PARTITION_ROOT $LUKS_DEVICE_NAME
         sleep 5
+        dd bs=512 count=4 if=/dev/random of=/crypto_keyfile.bin iflag=fullblock
+        chmod 600 /crypto_keyfile.bin
+        chmod 600 /boot/initramfs-linux*
+        cryptsetup luksAddKey $PARTITION_ROOT /crypto_keyfile.bin
     fi
 
     if [ "$LVM" == "true" ]; then
@@ -785,10 +788,12 @@ function mkinitcpio_configuration() {
         fi
         if [ -n "$LUKS_PASSWORD" ]; then
             HOOKS=$(echo $HOOKS | sed 's/!encrypt/encrypt/')
+            FILES="/crypto_keyfile.bin"
         fi
     fi
     HOOKS=$(sanitize_variable "$HOOKS")
     arch-chroot /mnt sed -i "s/^HOOKS=(.*)$/HOOKS=($HOOKS)/" /etc/mkinitcpio.conf
+    arch-chroot /mnt sed -i "s/^FILES=(.*)$/FILES=($FILES)/" /etc/mkinitcpio.conf
 
     if [ "$KERNELS_COMPRESSION" != "" ]; then
         arch-chroot /mnt sed -i 's/^#COMPRESSION="'"$KERNELS_COMPRESSION"'"/COMPRESSION="'"$KERNELS_COMPRESSION"'"/' /etc/mkinitcpio.conf

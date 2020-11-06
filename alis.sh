@@ -516,7 +516,8 @@ function partition() {
 
     # luks and lvm
     if [ -n "$LUKS_PASSWORD" ]; then
-        echo -n "$LUKS_PASSWORD" | cryptsetup --key-size=512 --key-file=- luksFormat --type luks2 $PARTITION_ROOT
+        dd bs=512 count=4 if=/dev/random of=/etc/luks_ikey iflag=fullblock
+        echo -n "$LUKS_PASSWORD" | cryptsetup --key-size=512 --key-file=/etc/luks_ikey luksFormat --type luks1 $PARTITION_ROOT
         echo -n "$LUKS_PASSWORD" | cryptsetup --key-file=- open $PARTITION_ROOT $LUKS_DEVICE_NAME
         sleep 5
     fi
@@ -653,7 +654,7 @@ function install() {
 function configuration() {
     print_step "configuration()"
 
-    genfstab -U /mnt >> /mnt/etc/fstab
+    genfstab -L /mnt >> /mnt/etc/fstab
 
     if [ -n "$SWAP_SIZE" ]; then
         echo "# swap" >> /mnt/etc/fstab

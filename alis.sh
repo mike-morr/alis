@@ -601,6 +601,7 @@ function partition() {
 
         mkdir -p /mnt/boot/efi
         mount -o "$PARTITION_OPTIONS" "LABEL=${BOOT_LABEL}" /mnt/boot/efi
+        cp /crypto_keyfile.bin /mnt/
     else
         mount -o "$PARTITION_OPTIONS" "LABEL=${ROOT_LABEL}" /mnt
 

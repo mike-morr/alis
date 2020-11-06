@@ -788,7 +788,7 @@ function mkinitcpio_configuration() {
         fi
         if [ -n "$LUKS_PASSWORD" ]; then
             HOOKS=$(echo $HOOKS | sed 's/!encrypt/encrypt/')
-            FILES="/crypto_keyfile.bin"
+            FILES="\/crypto_keyfile.bin"
         fi
     fi
     HOOKS=$(sanitize_variable "$HOOKS")

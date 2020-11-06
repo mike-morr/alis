@@ -658,7 +658,7 @@ function install() {
 function configuration() {
     print_step "configuration()"
 
-    genfstab -L /mnt >> /mnt/etc/fstab
+    genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
 
     if [ -n "$SWAP_SIZE" ]; then
         echo "# swap" >> /mnt/etc/fstab

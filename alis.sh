@@ -103,10 +103,10 @@ function sanitize_variables() {
 
 function sanitize_variable() {
     VARIABLE=$1
-    VARIABLE=$(echo $VARIABLE | sed "s/![^ ]*//g") # remove disabled
-    VARIABLE=$(echo $VARIABLE | sed "s/ {2,}/ /g") # remove unnecessary white spaces
-    VARIABLE=$(echo $VARIABLE | sed 's/^[[:space:]]*//') # trim leading
-    VARIABLE=$(echo $VARIABLE | sed 's/[[:space:]]*$//') # trim trailing
+    VARIABLE=$(echo "$VARIABLE" | sed "s/![^ ]*//g") # remove disabled
+    VARIABLE=$(echo "$VARIABLE" | sed "s/ {2,}/ /g") # remove unnecessary white spaces
+    VARIABLE=$(echo "$VARIABLE" | sed 's/^[[:space:]]*//') # trim leading
+    VARIABLE=$(echo "$VARIABLE" | sed 's/[[:space:]]*$//') # trim trailing
     echo "$VARIABLE"
 }
 
@@ -193,11 +193,11 @@ function check_variables_list() {
     VALUE=$2
     VALUES=$3
     REQUIRED=$4
-    if [ "$REQUIRED" == "" -o "$REQUIRED" == "true" ]; then
+    if [ "$REQUIRED" == "" ] || [ "$REQUIRED" == "true" ]; then
         check_variables_value "$NAME" "$VALUE"
     fi
 
-    if [ "$VALUE" != "" -a -z "$(echo "$VALUES" | grep -F -w "$VALUE")" ]; then
+    if [ "$VALUE" != "" ] && [ -z "$(echo "$VALUES" | grep -F -w "$VALUE")" ]; then
         echo "$NAME environment variable value [$VALUE] must be in [$VALUES]."
         exit
     fi
@@ -391,9 +391,9 @@ function ask_passwords() {
         done
     fi
 
-    for I in ${!ADDITIONAL_USERS[@]}; do
+    for I in "${!ADDITIONAL_USERS[@]}"; do
         VALUE=${ADDITIONAL_USERS[${I}]}
-        IFS='=' S=($VALUE)
+        IFS='=' S=("$VALUE")
         USER=${S[0]}
         PASSWORD=${S[1]}
         PASSWORD_RETYPE=""
@@ -658,7 +658,7 @@ function install() {
 function configuration() {
     print_step "configuration()"
 
-    genfstab -t PARTUUID /mnt >> /mnt/etc/fstab
+    genfstab -U /mnt >> /mnt/etc/fstab
 
     if [ -n "$SWAP_SIZE" ]; then
         echo "# swap" >> /mnt/etc/fstab
@@ -755,7 +755,7 @@ function mkinitcpio_configuration() {
         if [ "$FRAMEBUFFER_COMPRESSION" == "true" ]; then
             OPTIONS="$OPTIONS enable_fbc=1"
         fi
-        if [ -n "$OPTIONS"]; then
+        if [ -n "$OPTIONS" ]; then
             echo "options i915 $OPTIONS" > /mnt/etc/modprobe.d/i915.conf
         fi
     fi
@@ -932,8 +932,8 @@ function users() {
 
     create_user "$USER_NAME" "$USER_PASSWORD"
 
-    for U in ${ADDITIONAL_USERS[@]}; do
-        IFS='=' S=(${U})
+    for U in "${ADDITIONAL_USERS[@]}"; do
+        IFS='=' S=("${U}")
         USER=${S[0]}
         PASSWORD=${S[1]}
         create_user "${USER}" "${PASSWORD}"
@@ -1101,10 +1101,13 @@ function bootloader_grub() {
     arch-chroot /mnt sed -i 's/#GRUB_ENABLE_CRYPTODISK=y/GRUB_ENABLE_CRYPTODISK=y/' /etc/default/grub
 
     arch-chroot /mnt sed -i -E 's/GRUB_CMDLINE_LINUX_DEFAULT="(.*) quiet"/GRUB_CMDLINE_LINUX_DEFAULT="\1"/' /etc/default/grub
+    arch-chroot /mnt cat /etc/default/grub | echo ${}
     arch-chroot /mnt sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="'"$CMDLINE_LINUX"'"/' /etc/default/grub
-    echo "" >> /mnt/etc/default/grub
-    echo "# alis" >> /mnt/etc/default/grub
-    echo "GRUB_DISABLE_SUBMENU=y" >> /mnt/etc/default/grub
+    {
+        echo ""
+        echo "# alis"
+        echo "GRUB_DISABLE_SUBMENU=y"
+    } >> /mnt/etc/default/grub
 
     if [ "$BIOS_TYPE" == "uefi" ]; then
         pacman_install "efibootmgr"
@@ -1393,8 +1396,8 @@ function custom_shell() {
     if [ -n "$CUSTOM_SHELL_PATH" ]; then
         custom_shell_user "root" $CUSTOM_SHELL_PATH
         custom_shell_user "$USER_NAME" $CUSTOM_SHELL_PATH
-        for U in ${ADDITIONAL_USERS[@]}; do
-            IFS='=' S=(${U})
+        for U in "${ADDITIONAL_USERS[@]}"; do
+            IFS='=' S=("${U}")
             USER=${S[0]}
             custom_shell_user "$USER" $CUSTOM_SHELL_PATH
         done
@@ -1529,8 +1532,8 @@ function packages_aur() {
 }
 
 function systemd_units() {
-    IFS=' ' UNITS=($SYSTEMD_UNITS)
-    for U in ${UNITS[@]}; do
+    IFS=' ' UNITS=("$SYSTEMD_UNITS")
+    for U in "${UNITS[@]}"; do
         UNIT=${U}
         if [[ $UNIT == !* ]]; then
             ACTION="disable"
@@ -1607,7 +1610,7 @@ function pacman_install() {
     IFS=' ' PACKAGES=($1)
     for VARIABLE in {1..5}
     do
-        arch-chroot /mnt pacman -Syu --noconfirm --needed ${PACKAGES[@]}
+        arch-chroot /mnt pacman -Syu --noconfirm --needed "${PACKAGES[@]}"
         if [ $? == 0 ]; then
             break
         else
@@ -1643,8 +1646,8 @@ function print_step() {
 function execute_step() {
     STEP="$1"
     STEPS="$2"
-    if [[ " $STEPS " =~ " $STEP " ]]; then
-        eval $STEP
+    if [[ " $STEPS " =~ $STEP ]]; then
+        eval "$STEP"
         save_globals
     else
         echo "Skipping $STEP"
@@ -1653,6 +1656,7 @@ function execute_step() {
 
 function load_globals() {
     if [ -f "$GLOBALS_FILE" ]; then
+        # shellcheck source=src/examples/config.sh
         source "$GLOBALS_FILE"
     fi
 }
@@ -1702,7 +1706,7 @@ function main() {
     # get step execute from
     FOUND="false"
     STEPS=""
-    for S in ${ALL_STEPS[@]}; do
+    for S in "${ALL_STEPS[@]}"; do
         if [ $FOUND = "true" -o "${STEP}" = "${S}" ]; then
             FOUND="true"
             STEPS="$STEPS $S"
@@ -1748,4 +1752,4 @@ function main() {
     execute_step "end" "${STEPS}"
 }
 
-main $@
+main "$@"

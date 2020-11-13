@@ -1074,7 +1074,7 @@ function bootloader() {
         #     BOOTLOADER_ALLOW_DISCARDS=""
         # fi
         # CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
-        CMDLINE_LINUX="cryptdevice=UUID=${UUID_ROOT}:${LUKS_DEVICE_NAME} root=\/dev\/mapper\/${LUKS_DEVICE_NAME} nowatchdog cryptkey=rootfs:\/crypto_keyfile.bin"
+        CMDLINE_LINUX="cryptdevice=PARTUUID=${PARTUUID_ROOT}:${LUKS_DEVICE_NAME} root=\/dev\/mapper\/${LUKS_DEVICE_NAME} nowatchdog cryptkey=rootfs:\/crypto_keyfile.bin"
     fi
 
     if [ -n "$KERNELS_PARAMETERS" ]; then
@@ -1747,7 +1747,7 @@ function main() {
         execute_step "copyDesktopBackgrounds" "${STEPS}"
     fi
     execute_step "packages" "${STEPS}"
-    execute_step "systemd_units" "${STEPS}"
+    # execute_step "systemd_units" "${STEPS}"
     execute_step "terminate" "${STEPS}"
     execute_step "end" "${STEPS}"
 }

@@ -1510,13 +1510,13 @@ function packages() {
 
 function packages_aur() {
     arch-chroot /mnt sed -i 's/%wheel ALL=(ALL) ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
-
+     
     if [ -n "$AUR" -o -n "$PACKAGES_AUR" ]; then
         pacman_install "git"
-
+        
         case "$AUR" in
             "aurman" )
-                arch-chroot /mnt bash -c "echo -e \"$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n\" | su $USER_NAME -c \"cd /home/$USER_NAME && git clone https://aur.archlinux.org/$AUR.git && gpg --recv-key 4C3CE98F9579981C21CA1EC3465022E743D71E39 && (cd $AUR && makepkg -si --noconfirm) && rm -rf $AUR\""
+                arch-chroot /mnt bash -c "echo -e \"$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n\" | su $USER_NAME -c \"cd /home/$USER_NAME && cp /etc/pacman.d/gnupg/gpg.conf ~/.gnupg/gpg.conf && git clone https://aur.archlinux.org/$AUR.git && gpg --recv-key 4C3CE98F9579981C21CA1EC3465022E743D71E39 && (cd $AUR && makepkg -si --noconfirm) && rm -rf $AUR\""
                 ;;
             "yay" | *)
                 arch-chroot /mnt bash -c "echo -e \"$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n$USER_PASSWORD\n\" | su $USER_NAME -c \"cd /home/$USER_NAME && git clone https://aur.archlinux.org/$AUR.git && (cd $AUR && makepkg -si --noconfirm) && rm -rf $AUR\""

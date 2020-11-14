@@ -766,7 +766,8 @@ function mkinitcpio_configuration() {
     fi
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         pacman_install "btrfs-progs"
-        arch-chroot /mnt btrfs subvolume set-default / # default subvolume
+        # default subvolume
+        arch-chroot /mnt btrfs subvolume set-default / 
     fi
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
         pacman_install "f2fs-tools"

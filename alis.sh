@@ -661,11 +661,11 @@ function configuration() {
 
     genfstab -U /mnt >> /mnt/etc/fstab
 
-    if [ -n "$SWAP_SIZE" ]; then
-        echo "# swap" >> /mnt/etc/fstab
-        echo "$SWAPFILE none swap defaults 0 0" >> /mnt/etc/fstab
-        echo "" >> /mnt/etc/fstab
-    fi
+    #if [ -n "$SWAP_SIZE" ]; then
+    #    echo "# swap" >> /mnt/etc/fstab
+    #    echo "$SWAPFILE none swap defaults 0 0" >> /mnt/etc/fstab
+    #    echo "" >> /mnt/etc/fstab
+    #fi
 
     if [ "$DEVICE_TRIM" == "true" ]; then
         if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then

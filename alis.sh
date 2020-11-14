@@ -583,7 +583,7 @@ function partition() {
         btrfs subvolume create @tmp
         btrfs subvolume create @usr-local
         btrfs subvolume create @snapshots
-        cd ${HOME}
+        cd "${HOME}"
         umount /mnt
 
         
@@ -602,6 +602,7 @@ function partition() {
         mkdir -p /mnt/boot/efi
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot/efi
         cp /crypto_keyfile.bin /mnt/
+        arch-chroot /mnt btrfs subvolume set-default /
     else
         mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
 
@@ -795,6 +796,7 @@ function mkinitcpio_configuration() {
     HOOKS=$(sanitize_variable "$HOOKS")
     arch-chroot /mnt sed -i "s/^HOOKS=(.*)$/HOOKS=($HOOKS)/" /etc/mkinitcpio.conf
     arch-chroot /mnt sed -i "s/^FILES=(.*)$/FILES=($FILES)/" /etc/mkinitcpio.conf
+    arch-chroot /mnt sed -i "s/^BINARIES=(.*)$/BINARIES=(\/usr\/bin\/btrfs)/" /etc/mkinitcpio.conf
 
     if [ "$KERNELS_COMPRESSION" != "" ]; then
         arch-chroot /mnt sed -i 's/^#COMPRESSION="'"$KERNELS_COMPRESSION"'"/COMPRESSION="'"$KERNELS_COMPRESSION"'"/' /etc/mkinitcpio.conf
@@ -1058,7 +1060,7 @@ function bootloader() {
     fi
 
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
-        CMDLINE_LINUX="$CMDLINE_LINUX rootflags=subvol=@"
+        CMDLINE_LINUX="$CMDLINE_LINUX"
     fi
 
     if [ "$KMS" == "true" ]; then
@@ -1074,7 +1076,7 @@ function bootloader() {
         #     BOOTLOADER_ALLOW_DISCARDS=""
         # fi
         # CMDLINE_LINUX="cryptdevice=LABEL=${ROOT_LABEL}:$LUKS_DEVICE_NAME$BOOTLOADER_ALLOW_DISCARDS cryptkey=rootfs:\/crypto_keyfile.bin"
-        CMDLINE_LINUX="cryptdevice=PARTUUID=${PARTUUID_ROOT}:${LUKS_DEVICE_NAME} root=\/dev\/mapper\/${LUKS_DEVICE_NAME} nowatchdog cryptkey=rootfs:\/crypto_keyfile.bin"
+        CMDLINE_LINUX="cryptdevice=UUID=${UUID_ROOT}:${LUKS_DEVICE_NAME} root=\/dev\/mapper\/${LUKS_DEVICE_NAME} nowatchdog"
     fi
 
     if [ -n "$KERNELS_PARAMETERS" ]; then
@@ -1112,7 +1114,7 @@ function bootloader_grub() {
     if [ "$BIOS_TYPE" == "uefi" ]; then
         pacman_install "efibootmgr"
         mount
-        arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id='Arch Linux' --efi-directory=$ESP_DIRECTORY --recheck
+        arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id='Arch' --efi-directory=$ESP_DIRECTORY --recheck
         #arch-chroot /mnt efibootmgr --create --disk $DEVICE --part $PARTITION_BOOT_NUMBER --loader /EFI/grub/grubx64.efi --label "GRUB Boot Manager"
     fi
     if [ "$BIOS_TYPE" == "bios" ]; then

@@ -2,7 +2,7 @@
 set -e
 
 PARTITION_OPTIONS="defaults,noatime,X-mount.mkdir"
-CRYPTO_NAME="cryptoroot"
+CRYPTO_NAME="cryptroot"
 
 cryptsetup open "${DEVICE}2" $CRYPTO_NAME
 

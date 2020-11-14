@@ -6,6 +6,8 @@ CRYPTO_NAME="cryptoroot"
 
 cryptsetup open "${DEVICE}2" $CRYPTO_NAME
 
+PARTITION_BOOT="${DEVICE}1"
+
 DEVICE_ROOT="/dev/mapper/${CRYPTO_NAME}"
 
 mount -o "subvol=@,$PARTITION_OPTIONS,compress=zstd" "$DEVICE_ROOT" /mnt

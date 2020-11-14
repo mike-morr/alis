@@ -602,7 +602,7 @@ function partition() {
         mkdir -p /mnt/boot/efi
         mount -o "$PARTITION_OPTIONS" "$PARTITION_BOOT" /mnt/boot/efi
         cp /crypto_keyfile.bin /mnt/
-        arch-chroot /mnt btrfs subvolume set-default /
+        
     else
         mount -o "$PARTITION_OPTIONS" "$DEVICE_ROOT" /mnt
 
@@ -611,17 +611,17 @@ function partition() {
     fi
 
     # swap
-    if [ -n "$SWAP_SIZE" ]; then
-        if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
-            truncate -s 0 /mnt$SWAPFILE
-            chattr +C /mnt$SWAPFILE
-            btrfs property set /mnt$SWAPFILE compression none
-        fi
+    #if [ -n "$SWAP_SIZE" ]; then
+    #    if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
+    #        truncate -s 0 /mnt$SWAPFILE
+    #        chattr +C /mnt$SWAPFILE
+    #        btrfs property set /mnt$SWAPFILE compression none
+    #    fi
 
-        dd if=/dev/zero of=/mnt$SWAPFILE bs=1M count=$SWAP_SIZE status=progress
-        chmod 600 /mnt$SWAPFILE
-        mkswap /mnt$SWAPFILE
-    fi
+    #    dd if=/dev/zero of=/mnt$SWAPFILE bs=1M count=$SWAP_SIZE status=progress
+    #    chmod 600 /mnt$SWAPFILE
+    #    mkswap /mnt$SWAPFILE
+    #fi
 
     # set variables
     BOOT_DIRECTORY=/boot
@@ -717,9 +717,9 @@ Section "InputClass"
 EndSection
 EOT
 
-    if [ -n "$SWAP_SIZE" ]; then
-        echo "vm.swappiness=10" > /mnt/etc/sysctl.d/99-sysctl.conf
-    fi
+    #if [ -n "$SWAP_SIZE" ]; then
+    #    echo "vm.swappiness=10" > /mnt/etc/sysctl.d/99-sysctl.conf
+    #fi
 
     printf "$ROOT_PASSWORD\n$ROOT_PASSWORD\n" | arch-chroot /mnt passwd
 }
@@ -766,6 +766,7 @@ function mkinitcpio_configuration() {
     fi
     if [ "$FILE_SYSTEM_TYPE" == "btrfs" ]; then
         pacman_install "btrfs-progs"
+        arch-chroot /mnt btrfs subvolume set-default / # default subvolume
     fi
     if [ "$FILE_SYSTEM_TYPE" == "f2fs" ]; then
         pacman_install "f2fs-tools"
